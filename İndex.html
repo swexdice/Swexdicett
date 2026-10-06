@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWEX DICE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0e12;
+            --card-bg: #14161d;
+            --primary-red: #e60033;
+            --red-glow: rgba(230, 0, 51, 0.4);
+            --text-main: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px 10px;
+            background-image: radial-gradient(circle at top, #22050e 0%, var(--bg-dark) 70%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-discord {
+            background: #5865F2;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+            display: inline-block;
+        }
+
+        .badge-brand {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-brand .check {
+            background: #0088ff;
+            color: white;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 9px;
+        }
+
+        .site-title {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: 2px;
+            color: #fff;
+            margin: 10px 0 5px 0;
+            border-bottom: 1px solid var(--primary-red);
+            padding-bottom: 8px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #2d131a;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .dice-select-wrapper {
+            margin-bottom: 16px;
+        }
+
+        select {
+            width: 100%;
+            background: #0b0c0f;
+            border: 1px solid #33141d;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .dice-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            min-height: 110px;
+            align-items: center;
+        }
+
+        .dice-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dice {
+            width: 65px;
+            height: 65px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: background-color 0.1s ease;
+        }
+
+        .dice .dot {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .dice-label {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid currentColor;
+            text-transform: uppercase;
+        }
+
+        .color-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* Tıklama Efekti Bulunmayan Renk Butonları */
+        .btn-color {
+            background: #0b0c0f;
+            border: 1px solid #333;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+            outline: none;
+            transition: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-color:active,
+        .btn-color:focus,
+        .btn-color:hover {
+            outline: none !important;
+            box-shadow: none !important;
+            transform: none !important;
+            filter: none !important;
+        }
+
+        .c-red { color: #ff3344; border-color: #ff3344; }
+        .c-orange { color: #ff9900; border-color: #ff9900; }
+        .c-yellow { color: #ffee00; border-color: #ffee00; }
+        .c-green { color: #00cc66; border-color: #00cc66; }
+        .c-blue { color: #0099ff; border-color: #0099ff; }
+        .c-purple { color: #cc33ff; border-color: #cc33ff; }
+
+        .btn-roll {
+            width: 100%;
+            background: linear-gradient(180deg, #ff0044 0%, #990022 100%);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--red-glow);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            background: #101216;
+            border: 1px solid #222;
+            color: #888;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-red);
+            color: #fff;
+            border-color: var(--primary-red);
+        }
+
+        .info-box {
+            background: #231d09;
+            border: 1px dashed #e6a100;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 11px;
+            color: #ffcc00;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        input {
+            background: #0b0c0f;
+            border: 1px solid #2a131a;
+            padding: 10px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-red);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Sıfırlama Butonu Stili */
+        .btn-reset {
+            width: 100%;
+            background: #331118;
+            color: #ff4466;
+            border: 1px solid #661122;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .lb-item {
+            background: #0b0c0f;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            border-left: 3px solid #333;
+        }
+
+        .lb-item.top-1 { border-color: #ffd700; }
+        .lb-item.top-2 { border-color: #c0c0c0; }
+        .lb-item.top-3 { border-color: #cd7f32; }
+
+        .lb-role {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .role-owner {
+            background: rgba(230, 0, 51, 0.2);
+            color: var(--primary-red);
+            border: 1px solid var(--primary-red);
+        }
+
+        .role-admin {
+            background: rgba(0, 136, 255, 0.2);
+            color: #0088ff;
+            border: 1px solid #0088ff;
+        }
+
+        .history-box {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            padding: 10px;
+        }
+
+        .security-notice {
+            border-color: #ff0044;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .security-notice h4 {
+            color: var(--primary-red);
+            margin-bottom: 4px;
+        }
+
+        .rolling {
+            animation: shake 0.15s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-2px, 1px) rotate(-2deg); }
+            100% { transform: translate(1px, -1px) rotate(1deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-bar">
+        <a href="https://discord.gg/nnvjVY767" target="_blank" class="btn-discord">Discord Sunucusu</a>
+        <div class="badge-brand">
+            <span id="brand-name">SWEX</span>
+            <span class="check">✓</span>
+        </div>
+    </div>
+
+    <h1 class="site-title">SWEX DICE</h1>
+
+    <div class="card">
+        <div class="dice-select-wrapper">
+            <select id="dice-count" onchange="initDice()">
+                <option value="1">1 ZAR</option>
+                <option value="2">2 ZAR</option>
+                <option value="3">3 ZAR</option>
+                <option value="4" selected>4 ZAR</option>
+            </select>
+        </div>
+
+        <div class="dice-grid" id="dice-container"></div>
+
+        <!-- Renk Seçim Paneli (Hiçbir Efekti Yoktur) -->
+        <div class="color-selector">
+            <div class="btn-color c-red" onclick="selectSingleColor('RED')">RED</div>
+            <div class="btn-color c-orange" onclick="selectSingleColor('ORANGE')">ORANGE</div>
+            <div class="btn-color c-yellow" onclick="selectSingleColor('YELLOW')">YELLOW</div>
+            <div class="btn-color c-green" onclick="selectSingleColor('GREEN')">GREEN</div>
+            <div class="btn-color c-blue" onclick="selectSingleColor('BLUE')">BLUE</div>
+            <div class="btn-color c-purple" onclick="selectSingleColor('PURPLE')">PURPLE</div>
+        </div>
+
+        <button class="btn-roll" id="roll-btn" onclick="startRoll()">ZARLARI SALLA !</button>
+    </div>
+
+    <div class="card">
+        <div class="card-title">KULLANICI HESABI</div>
+        <div class="auth-tabs">
+            <button class="tab-btn active" id="btn-login-tab" onclick="switchTab('login')">Giriş Yap</button>
+            <button class="tab-btn" id="btn-register-tab" onclick="switchTab('register')">Kayıt Ol</button>
+        </div>
+        <div class="info-box">
+            🎁 Çok oynayanlara özel ödül verdiğimiz için genelde <strong>TikTok kullanıcı adınızla</strong> kayıt olun!
+        </div>
+        <div class="form-group">
+            <input type="text" id="username" placeholder="TikTok / Kullanıcı Adı">
+            <input type="password" id="password" placeholder="Şifre">
+        </div>
+        <button class="btn-submit" id="auth-submit-btn" onclick="handleAuth()">Giriş Yap</button>
+        
+        <!-- Tüm Hesap Verilerini Temizleme Butonu -->
+        <button class="btn-reset" onclick="resetAppData()">⚙️ Sistem Verilerini Sıfırla (Hesapları Sil)</button>
+    </div>
+
+    <div class="card">
+        <div class="card-title">🏆 YETKİLİ KADROSU</div>
+        <div class="leaderboard-list">
+            <div class="lb-item top-1">
+                <span>👑 swexno_1</span>
+                <span class="lb-role role-owner">OWNER</span>
+            </div>
+            <div class="lb-item top-2">
+                <span>🛡 melihpm</span>
+                <span class="lb-role role-admin">ADMIN</span>
+            </div>
+            <div class="lb-item top-3">
+                <span>🛡️ s2gramo6</span>
+                <span class="lb-role role-admin">ADMIN</span>
+            </div>
+            <div class="lb-item">
+                <span>🛡️ sabtrad466</span>
+                <span class="lb-role role-admin">ADMIN</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">🎲 GEÇMİŞ GELEN RENKLER</div>
+        <div class="history-box" id="history">
+            Henüz zar sallanmadı.
+        </div>
+    </div>
+
+    <div class="card security-notice">
+        <h4>🛡️ GÜVENİLİRLİK UYARISI</h4>
+        <p style="color:#aaa;">Sistemimiz rastgele sonuçlar üretir. Tüm tur sonuçları şifreli olarak saklanmaktadır.</p>
+    </div>
+</div>
+
+<script>
+    const COLORS = [
+        { name: 'RED', hex: '#ff3344' },
+        { name: 'ORANGE', hex: '#ff9900' },
+        { name: 'YELLOW', hex: '#ffee00' },
+        { name: 'GREEN', hex: '#00cc66' },
+        { name: 'BLUE', hex: '#0099ff' },
+        { name: 'PURPLE', hex: '#cc33ff' }
+    ];
+
+    const PRIVILEGED_USERS = ["swexno_1", "melihpm", "s2gramo6", "sabtrad466"];
+    const MASTER_PIN = "1234"; 
+
+    let currentMode = 'login';
+    let blockedColor = null; 
+    let isPrivileged = false;
+    let isRolling = false;
+
+    function switchTab(mode) {
+        currentMode = mode;
+        const loginBtn = document.getElementById('btn-login-tab');
+        const regBtn = document.getElementById('btn-register-tab');
+        const submitBtn = document.getElementById('auth-submit-btn');
+
+        if (mode === 'login') {
+            loginBtn.classList.add('active');
+            regBtn.classList.remove('active');
+            submitBtn.innerText = 'Giriş Yap';
+        } else {
+            regBtn.classList.add('active');
+            loginBtn.classList.remove('active');
+            submitBtn.innerText = 'Kayıt Ol';
+        }
+    }
+
+    function handleAuth() {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+
+        if (!user || !pass) {
+            alert("Lütfen kullanıcı adı ve şifre giriniz!");
+            return;
+        }
+
+        let usersDB = JSON.parse(localStorage.getItem('swex_users') || '{}');
+
+        if (currentMode === 'register') {
+            if (PRIVILEGED_USERS.includes(user)) {
+                const pin = prompt("Bu yetkili bir hesaptır! Güvenlik PIN kodunu giriniz:");
+                if (pin !== MASTER_PIN) {
+                    alert("Hatalı PIN! Yetkili adı ile kayıt olunamaz.");
+                    return;
+                }
+            }
+
+            if (usersDB[user]) {
+                alert("Bu kullanıcı adı zaten kayıtlı! Giriş yapmayı deneyin.");
+                return;
+            }
+
+            usersDB[user] = pass;
+            localStorage.setItem('swex_users', JSON.stringify(usersDB));
+            alert("Başarıyla kayıt olundu! Şimdi giriş yapabilirsiniz.");
+            switchTab('login');
+
+        } else { // Giriş İşlemi
+            if (!usersDB[user] || usersDB[user] !== pass) {
+                alert("Kullanıcı adı veya şifre hatalı!");
+                return;
+            }
+
+            isPrivileged = PRIVILEGED_USERS.includes(user);
+            alert(`Hoşgeldin ${user}!`);
+        }
+    }
+
+    // Telefon veya Bilgisayarda Tek Tıkla Sıfırlama Fonksiyonu
+    function resetAppData() {
+        if (confirm("Kayıtlı tüm kullanıcı hesapları ve şifreler silinecek. Emin misiniz?")) {
+            localStorage.removeItem('swex_users');
+            isPrivileged = false;
+            blockedColor = null;
+            alert("Tüm hesap verileri başarıyla sıfırlandı! Artık yetkili kullanıcı adlarıyla tekrar kayıt olabilirsiniz.");
+            location.reload();
+        }
+    }
+
+    function initDice() {
+        const count = parseInt(document.getElementById('dice-count').value);
+        const container = document.getElementById('dice-container');
+        container.innerHTML = '';
+
+        for (let i = 0; i < count; i++) {
+            const defaultColor = COLORS[i % COLORS.length];
+            container.innerHTML += createDiceHTML(defaultColor.hex, defaultColor.name);
+        }
+    }
+
+    function createDiceHTML(hex, name) {
+        return `
+            <div class="dice-item">
+                <div class="dice" style="background-color: ${hex}">
+                    <div class="dot"></div>
+                </div>
+                <div class="dice-label" style="color: ${hex}">${name}</div>
+            </div>
+        `;
+    }
+
+    // Gizli Renk Engelleme Seçimi
+    function selectSingleColor(colorName) {
+        if (blockedColor === colorName) {
+            blockedColor = null;
+        } else {
+            blockedColor = colorName;
+        }
+    }
+
+    function startRoll() {
+        if (isRolling) return;
+        isRolling = true;
+
+        const count = parseInt(document.getElementById('dice-count').value);
+        const container = document.getElementById('dice-container');
+        let rollIntervals = 0;
+        
+        const animInterval = setInterval(() => {
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const randomPick = COLORS[Math.floor(Math.random() * COLORS.length)];
+                container.innerHTML += createDiceHTML(randomPick.hex, randomPick.name);
+            }
+            container.querySelectorAll('.dice').forEach(d => d.classList.add('rolling'));
+
+            rollIntervals++;
+            if (rollIntervals > 10) {
+                clearInterval(animInterval);
+                finishRoll();
+            }
+        }, 100);
+    }
+
+    function finishRoll() {
+        const count = parseInt(document.getElementById('dice-count').value);
+        const container = document.getElementById('dice-container');
+        container.innerHTML = '';
+        
+        let finalResults = [];
+
+        for (let i = 0; i < count; i++) {
+            let availableColors = COLORS;
+
+            // Sadece yetkili kullanıcı giriş yaptıysa ve renk seçtiyse engelleme devreye girer
+            if (isPrivileged && blockedColor) {
+                availableColors = COLORS.filter(c => c.name !== blockedColor);
+            }
+
+            const finalPick = availableColors[Math.floor(Math.random() * availableColors.length)];
+            container.innerHTML += createDiceHTML(finalPick.hex, finalPick.name);
+            finalResults.push(finalPick.name);
+        }
+
+        document.getElementById('history').innerText = "Son Sonuç: " + finalResults.join(" - ");
+        isRolling = false;
+    }
+
+    initDice();
+</script>
+
+</body>
+              </html>
+              
